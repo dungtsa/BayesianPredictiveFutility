@@ -1,10 +1,11 @@
 # BayesianPredictiveFutility
-The tool calculates power for the Bayesian pick-the-winner design in a randomized phase II clinical trial. It also generates report and statistical plan so clinicians could easily incorporate it into the clinical trial protocol.
-(reference: A Bayesian pick-the-winner design in a randomized phase II clinical trial; Chen et al; submitted).
+The tool provides futility interim analysis plan using the Bayesian predictive design in single arm early  phase II clinical trial. It also generates  statistical plan so clinicians could easily incorporate it into the clinical trial protocol.
+(reference: Application of Bayesian predictive probability for interim analysis in single-arm early phase II trial. Chen et al; submitted).
+
 
 ## Features
 
-* The shiny applictaion provides power calculation for the Bayesian pick-the-winner design in a randomized phase II clinical trial and generates a statistical plan to be easily incorporated  into the clinical trial protocol. 
+* The shiny applictaion provides futility interim analysis plan for the Bayesian predictive design design in single arm early  phase II clinical trial and generates a statistical plan to be easily incorporated  into the clinical trial protocol. 
 
 ## Installation
 
@@ -13,14 +14,14 @@ Simply run the following from an R console:
 ```r
 if (!require("devtools"))
   install.packages("devtools")
-devtools::install_github("dungtsa/BayesianPickWinner",force = TRUE)
+devtools::install_github("dungtsa/BayesianPredictiveFutility",force = TRUE)
 ```
 
 ## Getting Started
 
 ```r
-require("BayesianPickWinner")
-bayes.pick.winner()
+require("BayesianPredictiveFutility")
+Bayesian_predictive_Shinny_app()
 ```
 -------------------------------
 Snapshot of shiny app: initial 
