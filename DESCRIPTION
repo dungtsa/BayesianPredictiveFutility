@@ -1,0 +1,12 @@
+Package: BayesianPredictiveFutility
+Type: Package
+Title: Bayesian predictive probability for interim analysis in single-arm early phase II trial
+Version: 0.1.0
+Authors@R: person("Dung-Tsa", "Chen", email = "Dung-Tsa.Chen@moffitt.org", role = c("aut", "cre"))
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: An tool to generate a statistical plan
+    for a randomized early phase II clinicla trial.
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
