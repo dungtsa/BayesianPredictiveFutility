@@ -9,6 +9,7 @@
 #' @param outcome.tmp:  label for the outcome
 #' @param arm.name:  label for the experimental arm
 #' @param p.h1: response rate in alternative hypothesis
+#' @param sim.n: number of simulations
 #' @param plot.status: indictor whether to generate plot
 #' @name  Bayesian.predictive.futility.fun
 #' @title Bayesian predictive design
@@ -20,9 +21,8 @@
 
 #-------
 Bayesian.predictive.futility.fun<-
-  function(n1,n2,p.target=0.2,cutoff.n.for.greater.p0=0.95,predictive.cutoff=0.05,beta.a=1,beta.b=1,outcome.tmp='response',arm.name='B',p.h1=.4,plot.status=F)
+  function(n1,n2,p.target=0.2,cutoff.n.for.greater.p0=0.95,predictive.cutoff=0.05,beta.a=1,beta.b=1,outcome.tmp='response',arm.name='B',p.h1=.4,sim.n=10000,plot.status=F)
   {
-    require(extraDistr)
     beta.a<-beta.a+10^(-100)
     beta.b<-beta.b+10^(-100)
     tmp2<-numeric(0)
@@ -35,7 +35,7 @@ Bayesian.predictive.futility.fun<-
       tmp2<-rbind(tmp2,1-pbbinom(0:(n2-1),n2,beta.a+k,beta.b+(n1-k)))
     }
     dimnames(tmp2)<-list(0:n1,1:n2)
-
+    
     kk<-0:(n1+n2)
     kk1<-kk[(1-pbeta(p.target,beta.a+kk,beta.b+(n1+n2)-kk))>cutoff.n.for.greater.p0]
     n.needed.for.greater.p0<-kk1[1]
@@ -47,14 +47,19 @@ Bayesian.predictive.futility.fun<-
       tmp<-tmp2[paste(i),paste(min(n2,n.needed.for.greater.p0-i)),drop=F]
       tmp3<-rbind(tmp3, c(i,min(n2,n.needed.for.greater.p0-i),as.numeric(dimnames(tmp)[[1]]),as.numeric(dimnames(tmp)[[2]]), as.vector(tmp)))
     }
-
+    
     kk2<-tmp3[tmp3[,5]<predictive.cutoff,1]
     kk2.len<-length(kk2)
-
+    #print(kk2)
+    #print(kk2.len)
+    #kk2<-(1:dim(tmp3)[1])[tmp3[,5]<predictive.cutoff]
+    
     pp<-sort(unique(c(p.target-c(0.1,0.05),p.target,p.target+c(0.1,0.05,.15,.2,.25,.3),p.h1)))
     pp<-pp[(pp>0)&(pp<1)]
-
-
+    
+    #if(length(kk2)==0) stop('The rule always passes the interim analysis')
+    #When there are 0 patients with response for the first 15 patients in the interim analysis, the predictive probability of 3 or more patients with response in the future remaining 15 patients is 74%. Since the cutoff for the predictive probability, 20%, is below 74%, it will always pass the interim analysis. So there is no need to have an interim analysis.
+    
     if(length(kk2)==0)
     {
       sen.null<-matrix(NA,length(pp),2)
@@ -69,7 +74,7 @@ Bayesian.predictive.futility.fun<-
       n.predictive.cutoff<-kk2[length(kk2)]
       if(plot.status)
       {
-
+        
         plot(tmp3[,5],type='h',axes=F,xlab=paste('number of patients with ', outcome.tmp,' in the 1st ',n1,' patients',sep=''),ylab='predictive probability',lwd=3,cex.lab=1.5)
         box();axis(2,cex.axis=1.2)
         axis(2,predictive.cutoff,cex.axis=1.2)
@@ -81,8 +86,12 @@ Bayesian.predictive.futility.fun<-
         arrows(kk2.len, 1, kk2.len, y1 = 0.1,col=3,lwd=3)
         text(1:dim(tmp3)[1],tmp3[,5],round(tmp3[,5],2),col=2,cex=2)
       }
-
-
+      
+      #pp<-sort(unique(c(p.target-c(0.1,0.05),p.target,p.target+c(0.1,0.05,.15,.2),p.h1)))
+      #pp<-sort(unique(c(p.target-c(0.1,0.05),p.target,p.target+c(0.1,0.05,.15,.2,.25,.3),p.h1)))
+      
+      #pp<-pp[(pp>0)&(pp<1)]
+      
       fun1<-function(pp,n1,n2,r1,r)
       {
         # r1: x<=r1|1st stage: stop trial at 1st stage
@@ -96,14 +105,29 @@ Bayesian.predictive.futility.fun<-
       }
       tmp5<-t(apply(t(pp),2,fun1,n1=n1,n2=n2,r1=n.predictive.cutoff,r=n.needed.for.greater.p0-1))
       dimnames(tmp5)<-list(pp,c('prob.stop','prob.above.threshold.of.reject.Ho'))
-
-
+      
+      if(1>2)
+      {
+        tmp5<-numeric(0)
+        for(i in 1:length(pp))
+        {
+          p1<-pp[i]
+          tmp4<-t(apply(as.matrix(1:sim.n),1,function(x) c(rbinom(1,n1,p1),rbinom(1,n2,p1))))
+          tmp41<-cbind(tmp4[,1]<=n.predictive.cutoff,
+                       apply(tmp4,1,sum)>=n.needed.for.greater.p0)
+          tmp5<-rbind(tmp5, c(mean(tmp41[,1]),mean((1-tmp41[,1])*tmp41[,2])))
+          #---1st column is prob of early stopping
+          #----2nd column is power: prob(pass 1st stage and # of responses >=the curoff)
+        }
+        dimnames(tmp5)<-list(pp,c('prob.stop','prob.above.threshold.of.reject.Ho'))
+      }
+      
       if(plot.status)
       {
         par(mfrow=c(2,1))
         aa1<-barplot(tmp5[,1],xlab=paste('Rate of ',outcome.tmp,sep=''),ylab='Probability of early stopping the arm',main='Sensitivity Analysis \n Probability of early stopping the treatment arm',lwd=3,cex.lab=1.5,ylim=c(0,1),cex.main=2,cex.lab=1.5,cex.axis=1.5,cex=1.5)
         text(aa1,tmp5[,1],round(tmp5[,1],2),col=2,cex=2)
-
+        
         aa1<-barplot(tmp5[,2],xlab=paste('Rate of ',outcome.tmp,sep=''),ylab=paste('Probability of at least ', n.needed.for.greater.p0,' patients with ', outcome.tmp,sep=''),main=paste('Probability of at least ', n.needed.for.greater.p0,' patients with ',outcome.tmp,sep=''),lwd=3,cex.lab=1.5,ylim=c(0,1),cex.main=2,cex.lab=1.5,cex.axis=1.5,cex=1.5)
         text(aa1,tmp5[,2]+.1,round(tmp5[,2],2),col=2,cex=2)
         par(mfrow=c(1,1))
