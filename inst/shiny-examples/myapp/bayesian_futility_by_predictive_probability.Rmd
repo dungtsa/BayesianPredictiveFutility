@@ -5,9 +5,10 @@ output:
   word_document: default
 header-includes: \usepackage{bbm}
 ---
-========================================================
+ 
+ ======================================================== 
 
-```{r library, echo=FALSE,comment="",warning=FALSE,message=FALSE}
+```{r library, echo = FALSE,comment = "",warning = FALSE,message = FALSE}
 
 library(shiny)
 library(knitr)
@@ -15,65 +16,65 @@ library(rmarkdown)
 library(extraDistr)
 #library(kableExtra)
 
-options(scipen=3)
-#options(knitr.table.format = "latex")
+options(scipen = 3)
+#options(knitr.table.format  =  "latex")
 ```
 
 
-```{r set-options, echo=FALSE, cache=FALSE}
-options(width=60)
-opts_chunk$set(comment = "", warning = FALSE, message = FALSE, echo = TRUE, tidy = FALSE, size="small",fig.height=5)
+```{r set-options, echo = FALSE, cache = FALSE}
+options(width = 60)
+opts_chunk$set(comment  =  "", warning  =  FALSE, message  =  FALSE, echo  =  TRUE, tidy  =  FALSE, size = "small",fig.height = 5)
 
 ```
 
 
-```{r, echo=FALSE}
-tmp99 <-  get.result.futilityA()
+```{r, echo = FALSE}
+tmp99  <-   get.result.futility()
 
 ```
 
 # Interim Analysis for Futility 
 
 
-```{r, echo=FALSE, results='asis'}
+```{r, echo = FALSE, results = 'asis'}
 cat(tmp99$a1)
 ```
 
 # Table 0: Stopping Boundary for Futility
 
-```{r, echo=FALSE, results='asis'}
+```{r, echo = FALSE, results = 'asis'}
  
-    aa0<-tmp99
-    aa<-aa0$n.list
-    cutoff.tmp<-c(aa0$n.predictive.cutoff,aa0$n.needed.for.greater.p0-1)
-    cutoff.tmp[cutoff.tmp==(-99)]<-'PASS'
-    aa<-rbind(c(1:(length(aa)-1),'Final'),cumsum(aa),aa,cutoff.tmp)
-    dimnames(aa)[[1]]<-c('Stage of interim analysis','Sample size up to the current stage','Sample size at each stage','Stopping boundary')
+    aa0 <- tmp99
+    aa <- aa0$n.list
+    cutoff.tmp <- c(aa0$n.predictive.cutoff,aa0$n.needed.for.greater.p0 - 1)
+    cutoff.tmp[cutoff.tmp == (-99)] <- 'PASS'
+    aa <- rbind(c(1:(length(aa) - 1),'Final'),cumsum(aa),aa,cutoff.tmp)
+    dimnames(aa)[[1]] <- c('Stage of interim analysis','Sample size up to the current stage','Sample size at each stage','Stopping boundary')
     print(kable(aa))
   
 ``` 
  
 # Table 1: Bayesian Predictive Probability 
 
-```{r, echo=FALSE, results='asis'}
+```{r, echo = FALSE, results = 'asis'}
 
-    aa0<-tmp99
-    aa.list<-aa0$predictive.prob.data
+    aa0 <- tmp99
+    aa.list <- aa0$predictive.prob.data
       
-    for(my_j in 1:length(aa.list))
+    for (my_j in 1:length(aa.list))
     {
-      stage.index<-ifelse(my_j==1,' 1st ',ifelse(my_j==2,' 2nd ',ifelse(my_j==3,' 3rd ',paste(' ',my_j,'th ',sep=''))))
-      aa<-aa.list[[my_j]][,3:5,drop=F]
-      aa[,dim(aa)[2]]<-round(aa[,dim(aa)[2]],3)
-      outcomeLabel<-aa0$outcomeLabel
-      dimnames(aa)[[2]]<-c(paste('number of patients with ', outcomeLabel,' in the ',stage.index,' interim analysis',sep=''),paste('minimum number of patients with ',outcomeLabel,' needed in the furture remaining patients',sep=''),'predictive probability')
+      stage.index <- ifelse(my_j == 1,' 1st ',ifelse(my_j == 2,' 2nd ',ifelse(my_j == 3,' 3rd ',paste(' ',my_j,'th ',sep = ''))))
+      aa <- aa.list[[my_j]][,3:5,drop = F]
+      aa[,dim(aa)[2]] <- round(aa[,dim(aa)[2]],3)
+      outcomeLabel <- aa0$outcomeLabel
+      dimnames(aa)[[2]] <- c(paste('number of patients with ', outcomeLabel,' in the ',stage.index,' interim analysis',sep = ''),paste('minimum number of patients with ',outcomeLabel,' needed in the furture remaining patients',sep = ''),'predictive probability')
       print(kable(aa))
       #kable(aa)
       #landscape()
-      #aa1<-kable(aa)
+      #aa1 <- kable(aa)
       #print( aa1)
       
-#print(kable_styling(aa1,full_width = T))
+#print(kable_styling(aa1,full_width  =  T))
       
     }
     
@@ -81,13 +82,13 @@ cat(tmp99$a1)
 
 # Table 2: Sensitivity Analysis 
 
-```{r, echo=FALSE, results='asis'}
+```{r, echo = FALSE, results = 'asis'}
 
-    aa<-tmp99$sensitivity.data
-aa<-round(aa,2)
-    outcomeLabel<-tmp99$outcomeLabel
-    aa<-cbind(as.numeric(dimnames(aa)[[1]]),aa)
-    dimnames(aa)[[2]]<-c('true rate',' overall probability of early stopping the trial',paste('probability to have at most ',aa0$n.needed.for.greater.p0,' patients with ',aa0$outcomeLabel,sep=''))
+    aa <- tmp99$sensitivity.data
+aa <- round(aa,2)
+    outcomeLabel <- tmp99$outcomeLabel
+    aa <- cbind(as.numeric(dimnames(aa)[[1]]),aa)
+    dimnames(aa)[[2]] <- c('true rate',' overall probability of early stopping the trial',paste('probability to have at most ',aa0$n.needed.for.greater.p0,' patients with ',aa0$outcomeLabel,sep = ''))
   kable(aa)
   
     
@@ -95,98 +96,98 @@ aa<-round(aa,2)
 
 # Figure 1: Bayesian Predictive Probability 
 
-```{r, echo=FALSE, results='asis',fig.height=16,fig.width=16,dpi=600}
+```{r, echo = FALSE, results = 'asis',fig.height = 16,fig.width = 16,dpi = 600}
 
-  res <-  tmp99
-  n.list<-res$n.list
-  pTarget<-res$pTarget
-  theta<-res$theta
-  predictive.cutoff<-cutoffPredictive<-res$cutoffPredictive
-  outcomeLabel<-res$outcomeLabel
-  armLabel<-res$armLabel
-  betaA<-res$betaA
-  betaB<-res$betaB
-  kk2.len.list<-res$kk2.len.list
-  n.predictive.cutoff.list<-res$n.predictive.cutoff
-  tmp3.list<-res$predictive.prob.data
+  res  <-   tmp99
+  n.list <- res$n.list
+  pTarget <- res$pTarget
+  theta <- res$theta
+  predictive.cutoff <- cutoffPredictive <- res$cutoffPredictive
+  outcomeLabel <- res$outcomeLabel
+  armLabel <- res$armLabel
+  betaA <- res$betaA
+  betaB <- res$betaB
+  kk2.len.list <- res$kk2.len.list
+  n.predictive.cutoff.list <- res$n.predictive.cutoff
+  tmp3.list <- res$predictive.prob.data
     for (my_j in 1:length(tmp3.list)) {
-      tmp3<-tmp3.list[[my_j]]
-      n1<-sum(n.list[1:my_j])
-      n2<-sum(n.list[(my_j+1):length(n.list)])
-      kk2.len<-kk2.len.list[[my_j]]
-      n.predictive.cutoff<-n.predictive.cutoff.list[my_j]
-      stage.index<-ifelse(my_j==1,' 1st ',ifelse(my_j==2,' 2nd ',ifelse(my_j==3,' 3rd ',paste(' ',my_j,'th ',sep=''))))
+      tmp3 <- tmp3.list[[my_j]]
+      n1 <- sum(n.list[1:my_j])
+      n2 <- sum(n.list[(my_j + 1):length(n.list)])
+      kk2.len <- kk2.len.list[[my_j]]
+      n.predictive.cutoff <- n.predictive.cutoff.list[my_j]
+      stage.index <- ifelse(my_j == 1,' 1st ',ifelse(my_j == 2,' 2nd ',ifelse(my_j == 3,' 3rd ',paste(' ',my_j,'th ',sep = ''))))
 
-        plot(tmp3[,5],type='h',axes=F,xlab=paste('number of patients with ', outcomeLabel,' in the',stage.index,' interim analysis with ',n1,' patients',sep=''),ylab='predictive probability',lwd=3,cex.lab=1.5)
-        box();axis(2,cex.axis=1.2)
-        axis(2,predictive.cutoff,cex.axis=1.2)
-        axis(1,1:dim(tmp3)[1],tmp3[,3],cex.axis=1.2)
-        axis(3,1:dim(tmp3)[1],tmp3[,4],cex.axis=1)
-        abline(h=predictive.cutoff,col=2,lty=2)
-        mtext(paste('minimum number of patients with ',outcomeLabel,' needed in the furture remaining ', n2,' patients',sep=''),side=3,line=1.8)
-        title(paste(stage.index,' Interim Analysis of for Futility \n\n',sep=''))
-        arrows(kk2.len, 1, kk2.len, y1 = 0.1,col=3,lwd=3)
-        text(1:dim(tmp3)[1],tmp3[,5],round(tmp3[,5],2),col=2,cex=2)
+        plot(tmp3[,5],type = 'h',axes = F,xlab = paste('number of patients with ', outcomeLabel,' in the',stage.index,' interim analysis with ',n1,' patients',sep = ''),ylab = 'predictive probability',lwd = 3,cex.lab = 1.5)
+        box();axis(2,cex.axis = 1.2)
+        axis(2,predictive.cutoff,cex.axis = 1.2)
+        axis(1,1:dim(tmp3)[1],tmp3[,3],cex.axis = 1.2)
+        axis(3,1:dim(tmp3)[1],tmp3[,4],cex.axis = 1)
+        abline(h = predictive.cutoff,col = 2,lty = 2)
+        mtext(paste('minimum number of patients with ',outcomeLabel,' needed in the furture remaining ', n2,' patients',sep = ''),side = 3,line = 1.8)
+        title(paste(stage.index,' Interim Analysis of for Futility \n\n',sep = ''))
+        arrows(kk2.len, 1, kk2.len, y1  =  0.1,col = 3,lwd = 3)
+        text(1:dim(tmp3)[1],tmp3[,5],round(tmp3[,5],2),col = 2,cex = 2)
   }
 
 ```
 
 # Figure 2: Sensitivity Analysis
 
-```{r, echo=FALSE, results='asis',fig.height=16,fig.width=14,dpi=600}
-    res <-  tmp99
-    tmp5<-res$sensitivity.data
-    tmp5.ind<-res$sensitivity.data.ind
-    n.list<-res$n.list
-    pTarget<-res$pTarget
-    theta<-res$theta
-    cutoffPredictive<-res$cutoffPredictive
-    outcomeLabel<-res$outcomeLabel
-    armLabel<-res$armLabel
-    betaA<-res$betaA
-    betaB<-res$betaB
-    n.predictive.cutoff<-res$n.predictive.cutoff
-    n.needed.for.greater.p0<-res$n.needed.for.greater.p0
+```{r, echo = FALSE, results = 'asis',fig.height = 16,fig.width = 14,dpi = 600}
+    res  <-   tmp99
+    tmp5 <- res$sensitivity.data
+    tmp5.ind <- res$sensitivity.data.ind
+    n.list <- res$n.list
+    pTarget <- res$pTarget
+    theta <- res$theta
+    cutoffPredictive <- res$cutoffPredictive
+    outcomeLabel <- res$outcomeLabel
+    armLabel <- res$armLabel
+    betaA <- res$betaA
+    betaB <- res$betaB
+    n.predictive.cutoff <- res$n.predictive.cutoff
+    n.needed.for.greater.p0 <- res$n.needed.for.greater.p0
     
-    par(mfrow=c(2,1))
-    aa1<-barplot(tmp5[,1],xlab=paste('Rate of ',outcomeLabel,sep=''),ylab='Probability of early stopping the trial overall',main='Sensitivity Analysis \n Overall probability of early stopping the trial',lwd=3,cex.lab=1.5,ylim=c(0,1),cex.main=2,cex.lab=1.5,cex.axis=1.5,cex=1.5)
-    text(aa1,tmp5[,1],round(tmp5[,1],2),col=2,cex=2)
+    par(mfrow = c(2,1))
+    aa1 <- barplot(tmp5[,1],xlab = paste('Rate of ',outcomeLabel,sep = ''),ylab = 'Probability of early stopping the trial overall',main = 'Sensitivity Analysis \n Overall probability of early stopping the trial',lwd = 3,cex.lab = 1.5,ylim = c(0,1),cex.main = 2,cex.lab = 1.5,cex.axis = 1.5,cex = 1.5)
+    text(aa1,tmp5[,1],round(tmp5[,1],2),col = 2,cex = 2)
     
-    aa1<-barplot(tmp5[,2],xlab=paste('Rate of ',outcomeLabel,sep=''),ylab=paste('Probability of at least ', n.needed.for.greater.p0,' patients with ', outcomeLabel,sep=''),main=paste('Probability of at least ', n.needed.for.greater.p0,' patients with ',outcomeLabel,sep=''),lwd=3,cex.lab=1.5,ylim=c(0,1),cex.main=2,cex.lab=1.5,cex.axis=1.5,cex=1.5)
-    text(aa1,tmp5[,2]+.1,round(tmp5[,2],2),col=2,cex=2)
-    par(mfrow=c(1,1))
+    aa1 <- barplot(tmp5[,2],xlab = paste('Rate of ',outcomeLabel,sep = ''),ylab = paste('Probability of at least ', n.needed.for.greater.p0,' patients with ', outcomeLabel,sep = ''),main = paste('Probability of at least ', n.needed.for.greater.p0,' patients with ',outcomeLabel,sep = ''),lwd = 3,cex.lab = 1.5,ylim = c(0,1),cex.main = 2,cex.lab = 1.5,cex.axis = 1.5,cex = 1.5)
+    text(aa1,tmp5[,2] + .1,round(tmp5[,2],2),col = 2,cex = 2)
+    par(mfrow = c(1,1))
 
 
 ```
 
 # Figure 3: Probability of Stopping Early by Each Interim Analysis
 
-```{r, echo=FALSE, results='asis',fig.height=16,fig.width=14,dpi=600}
-    res <-  tmp99
-    tmp5<-res$sensitivity.data
-    tmp5.ind<-res$sensitivity.data.ind
-    n.list<-res$n.list
-    pTarget<-res$pTarget
-    theta<-res$theta
-    cutoffPredictive<-res$cutoffPredictive
-    outcomeLabel<-res$outcomeLabel
-    armLabel<-res$armLabel
-    betaA<-res$betaA
-    betaB<-res$betaB
-    n.predictive.cutoff<-res$n.predictive.cutoff
-    n.needed.for.greater.p0<-res$n.needed.for.greater.p0
+```{r, echo = FALSE, results = 'asis',fig.height = 16,fig.width = 14,dpi = 600}
+    res  <-   tmp99
+    tmp5 <- res$sensitivity.data
+    tmp5.ind <- res$sensitivity.data.ind
+    n.list <- res$n.list
+    pTarget <- res$pTarget
+    theta <- res$theta
+    cutoffPredictive <- res$cutoffPredictive
+    outcomeLabel <- res$outcomeLabel
+    armLabel <- res$armLabel
+    betaA <- res$betaA
+    betaB <- res$betaB
+    n.predictive.cutoff <- res$n.predictive.cutoff
+    n.needed.for.greater.p0 <- res$n.needed.for.greater.p0
     
-    dim.n<-dim(tmp5.ind)[2]
+    dim.n <- dim(tmp5.ind)[2]
     
-      for(my_j in 1:(dim.n-2))
+      for (my_j in 1:(dim.n - ifelse(res$pH1 > pTarget,2, 1)))
       {
-        aa1<-barplot(tmp5.ind[,my_j],xlab=paste('Rate of ',outcomeLabel,sep=''),ylab=paste('Probability of early stopping the trial at interim',my_j),main=paste('Interim Analysis: ',my_j,'\n Probability of early stopping the trial',sep=''),lwd=3,cex.lab=1.5,ylim=c(0,1),cex.main=2,cex.lab=1.5,cex.axis=1.5,cex=1.5)
-        text(aa1,tmp5.ind[,my_j],round(tmp5.ind[,my_j],2),col=2,cex=2)
+        aa1 <- barplot(tmp5.ind[,my_j],xlab = paste('Rate of ',outcomeLabel,sep = ''),ylab = paste('Probability of early stopping the trial at interim',my_j),main = paste('Interim Analysis: ',my_j,'\n Probability of early stopping the trial',sep = ''),lwd = 3,cex.lab = 1.5,ylim = c(0,1),cex.main = 2,cex.lab = 1.5,cex.axis = 1.5,cex = 1.5)
+        text(aa1,tmp5.ind[,my_j],round(tmp5.ind[,my_j],2),col = 2,cex = 2)
       }
 ```
 
 # References 
 
-```{r, echo=FALSE, results='asis'}
+```{r, echo = FALSE, results = 'asis'}
 cat(tmp99$a2)
 ```
