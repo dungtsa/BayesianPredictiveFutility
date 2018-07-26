@@ -24,20 +24,24 @@ ui <- fluidPage(
     ),
     
     mainPanel(
-      h2("Interim Analysis for Futility"),
+      h2("Summary of Interim Analysis for Futility"),
+      textOutput("summary"),
+      tags$hr(),
+      
+      h3("Details"),
       textOutput("futility"),
       tags$hr(),
       
-      h4("Table 0: Stopping Boundary for Futility"),
+      h4("Table 1: Stopping Boundary for Futility"),
       tableOutput("stoppingBoundary"),
       tags$hr(),
       
       
-      h4("Table 1: Bayesian Predictive Probability"),
+      h4("Table 2: Bayesian Predictive Probability"),
       uiOutput("predictiveData"),
       tags$hr(),
       
-      h4("Table 2: Sensitivity Analysis"),
+      h4("Table 3: Sensitivity Analysis"),
       tableOutput("sensitivityData"),
       tags$hr(),
       
@@ -116,7 +120,7 @@ server <- function(input,output){
     stage.index <- ifelse(len.n.list == 1,' 1st ',ifelse(len.n.list == 2,' 2nd ',ifelse(len.n.list == 3,' 3rd ',paste(' ',len.n.list,'th ',sep = ''))))
     
     
-    a1 <- paste0('Futility evaluation will be implementded in ',length(n.predictive.cutoff),ifelse(length(n.predictive.cutoff) == 1,' interim analysis ',' interim analyses '),' for the first ',paste(cumsum(n.list[-length(n.list)]),collapse = ', '),' patients. ',' A Bayesian approach for futility analysis is used to calculate posterior probability and predictive probability for the rate of ',outcomeLabel,' with a non-informative beta prior, beta(',betaA,',',betaB,'). We consider a ',round(pTarget*100),'% rate or ',ifelse(increase, 'lower', 'higher'),' of ',outcomeLabel, ' as ineffective for the treatment. Thus, we expect the ',armLabel,' arm is not ',ifelse(increase, 'worse', 'better'),' than the historical control if the posterior probability of the rate (',outcomeLabel,') ',ifelse(increase, 'greater', 'less'),' than ',round(pTarget*100),'% is higher than ',theta,' (i.e., prob(rate of ',outcomeLabel,ifelse(increase, '>', '<'),round(pTarget*100),'% |data)>',theta,') ). \n \n With a total ',sum(n.list),' patients in ',armLabel,' arm, the number of patients with ',outcomeLabel,' needs to be ',n.needed.for.greater.p0,' or ',ifelse(increase, 'more', 'less'),' in order to meet the criteria. Therefore, we use the number of ',n.needed.for.greater.p0,' patients to guide the predictive probability. Specifically, for the first ',n.list[1],' patients in the 1st interim analysis, there are ',n.list[1] + 1,' ways for number of patients with ',outcomeLabel,' from 0, 1, to, ',n.list[1],'. In each case, given the number of patients with ',outcomeLabel,', $s$, in the first ',n.list[1],' patients, we calculate predictive probability of $',n.needed.for.greater.p0,'-s$ or ',ifelse(increase, 'more', 'less'),' patients with ',outcomeLabel,' in the future remaining ',sum(n.list) - n.list[1])
+    a1 <- paste0('A Bayesian approach for futility analysis is used to calculate posterior probability and predictive probability for the rate of ',outcomeLabel,' with a non-informative beta prior, beta(',betaA,',',betaB,'). We consider a ',round(pTarget*100),'% rate or ',ifelse(increase, 'lower', 'higher'),' of ',outcomeLabel, ' as ineffective for the treatment. Thus, we expect the ',armLabel,' arm is not ',ifelse(increase, 'worse', 'better'),' than the historical control if the posterior probability of the rate (',outcomeLabel,') ',ifelse(increase, 'greater', 'less'),' than ',round(pTarget*100),'% is higher than ',theta,' (i.e., prob(rate of ',outcomeLabel,ifelse(increase, '>', '<'),round(pTarget*100),'% |data)>',theta,') ). \n \n With a total ',sum(n.list),' patients in ',armLabel,' arm, the number of patients with ',outcomeLabel,' needs to be ',n.needed.for.greater.p0,' or ',ifelse(increase, 'more', 'less'),' in order to meet the criteria. Therefore, we use the number of ',n.needed.for.greater.p0,' patients to guide the predictive probability. Specifically, for the first ',n.list[1],' patients in the 1st interim analysis, there are ',n.list[1] + 1,' ways for number of patients with ',outcomeLabel,' from 0, 1, to, ',n.list[1],'. In each case, given the number of patients with ',outcomeLabel,', $s$, in the first ',n.list[1],' patients, we calculate predictive probability of $',n.needed.for.greater.p0,'-s$ or ',ifelse(increase, 'more', 'less'),' patients with ',outcomeLabel,' in the future remaining ',sum(n.list) - n.list[1])
     nn1 <- n.list[1]
     nn2 <- sum(n.list) - n.list[1]
     n.predictive.cutoff.text <- n.predictive.cutoff
@@ -127,19 +131,24 @@ server <- function(input,output){
     nn2.example <- sum(n.list) - nn1.example
     n.predictive.cutoff.example <- n.predictive.cutoff[!index.example][1]
     
-    a1 <- paste(a1,' patients, i.e., $\\sum_{i=',n.needed.for.greater.p0,'-s}^{',nn2,'} {',nn2,' \\choose i } \\frac{beta(',betaA,'+s+i,',betaB,'+(',nn1,'-s)+(',nn2,'-i))}{beta(',betaA,'+s,',betaB,'+(',nn1,'-s))}$.
+    a1 <- paste0(a1,' patients, i.e., $\\sum_{i=',n.needed.for.greater.p0,'-s}^{',nn2,'} {',nn2,' \\choose i } \\frac{beta(',betaA,'+s+i,',betaB,'+(',nn1,'-s)+(',nn2,'-i))}{beta(',betaA,'+s,',betaB,'+(',nn1,'-s))}$.
               Calculation of predictive probability is based on beta binominal distribution for the number of patients with ',outcomeLabel,' in the future remaining ',nn2,' patients given a beta distribution for the  rate of ',outcomeLabel,', $beta(',betaA,'+s,',betaB,'+',nn1,'-s)$. 
               For example, if there are ',n.predictive.cutoff.example[1],' patients with ',outcomeLabel,' in the first ',nn1.example,' patients, the predictive probability of ',n.needed.for.greater.p0 - n.predictive.cutoff.example[1],' or ',ifelse(increase, 'more', 'less'),' patients with ',outcomeLabel,' in the future remaining ',nn2.example,' patients would be 
               $\\sum_{i=',n.needed.for.greater.p0 - n.predictive.cutoff.example[1],'}^{',nn2.example,'}{',nn2.example,' \\choose i } \\frac{beta(',betaA,'+',n.predictive.cutoff.example[1],'+i,',betaB,'+(',nn1,'-',n.predictive.cutoff.example[1],')+(',nn2.example,'-i))}{beta(',betaA,'+',n.predictive.cutoff.example[1],',',betaB,'+(',nn1.example,'-',n.predictive.cutoff.example[1],'))} =',round(predictive.prob.data[[1]][predictive.prob.data[[1]][,3] == n.predictive.cutoff.example[1],5],3),'$.
               \n \n The predictive probability is also calculated for each of the remaining interim analyses to evaluate the chance of ',n.needed.for.greater.p0,'-s or ',ifelse(increase, 'more', 'less'),' patients with ',outcomeLabel,' in the future remaining patients given s patients with ',outcomeLabel,' in the current stage of interim analysis. ',
-                ' Figure 1 and Table 1 lists predictive probability for all scenarios of number of patients with ',outcomeLabel,' in each interim analysis and the associated largest number of patients with ',outcomeLabel,' needed in the future remaining patients to have at ',ifelse(increase, 'least', 'most'),' a total of ',n.needed.for.greater.p0,' patients with ',outcomeLabel,'. ', 
-                ' We consider that a ',round(cutoffPredictive*100),'% cutoff of the predictive probability will give little chance to have ',n.needed.for.greater.p0,' patients or ',ifelse(increase, 'more', 'less'),' with ',outcomeLabel,' at the end of study. \n \n Thus with this cutoff, the stopping rule (Table 0) will be: the trial will be stopped if there are ',ifelse(length(n.list) == 2,paste(n.predictive.cutoff,' or ',ifelse(increase, 'less', 'more'),' patients with ',outcomeLabel,' in the 1st interim analysis. ',sep = ''),paste(paste(paste(n.predictive.cutoff.text[-length(n.predictive.cutoff)],collapse = ', '),n.predictive.cutoff.text[length(n.predictive.cutoff)],sep = ', and '),' or ',ifelse(increase, 'less', 'more'),' patients with ',outcomeLabel,' in the 1st to ',stage.index,' interim analysis, respectively. ',sep = '')),
-                ' Sensitivity analysis (Figure 2 and Table 2) for this stopping rule shows that if the true rate of ',outcomeLabel,' is ',round(pTarget*100),'%, the chance to reach at ',ifelse(increase, 'least', 'most'),' a total of ',n.needed.for.greater.p0,' patients with ',outcomeLabel,' at end of the study is ',round(sensitivity.data[as.numeric(dimnames(sensitivity.data)[[1]]) == pTarget,2],2),' (Type I error). On the other hand, the probability to stop the trial early is ',round(sensitivity.data[as.numeric(dimnames(sensitivity.data)[[1]]) == pTarget,1],2)*100 ,'%. \n \n When the true rate of ',outcomeLabel,' is ',as.numeric(pH1)*100,'%, the chance to reach at ',ifelse(increase, 'least', 'most'),' ',n.needed.for.greater.p0,' patients with ',outcomeLabel,' at end of the study is ',round(sensitivity.data[paste(pH1),2],2),'. The corresponding probability to stop the treatment early is ',round(sensitivity.data[paste(pH1),1],2)*100,'%.',sep = '')
+                ' Figure 1 and Table 2 lists predictive probability for all scenarios of number of patients with ',outcomeLabel,' in each interim analysis and the associated largest number of patients with ',outcomeLabel,' needed in the future remaining patients to have at ',ifelse(increase, 'least', 'most'),' a total of ',n.needed.for.greater.p0,' patients with ',outcomeLabel,'. ', 
+                ' \n \n We consider that a ',round(cutoffPredictive*100),'% cutoff of the predictive probability will give little chance to have ',n.needed.for.greater.p0,' patients or ',ifelse(increase, 'more', 'less'),' with ',outcomeLabel,' at the end of study. Thus with this cutoff, the stopping rule (Table 1) will be: the trial will be stopped if there are ',ifelse(length(n.list) == 2,paste(n.predictive.cutoff,' or ',ifelse(increase, 'less', 'more'),' patients with ',outcomeLabel,' in the 1st interim analysis. ',sep = ''),paste(paste(paste(n.predictive.cutoff.text[-length(n.predictive.cutoff)],collapse = ', '),n.predictive.cutoff.text[length(n.predictive.cutoff)],sep = ', and '),' or ',ifelse(increase, 'less', 'more'),' patients with ',outcomeLabel,' in the 1st to ',stage.index,' interim analysis, respectively. ',sep = '')),
+                ' Sensitivity analysis (Figure 2 and Table 3) for this stopping rule shows that if the true rate of ',outcomeLabel,' is ',round(pTarget*100),'%, the chance to reach at ',ifelse(increase, 'least', 'most'),' a total of ',n.needed.for.greater.p0,' patients with ',outcomeLabel,' at end of the study is ',round(sensitivity.data[as.numeric(dimnames(sensitivity.data)[[1]]) == pTarget,2],2),' (Type I error), however the probability to stop the trial early is ',round(sensitivity.data[as.numeric(dimnames(sensitivity.data)[[1]]) == pTarget,1],2)*100 ,'%. \n \n When the true rate of ',outcomeLabel,' is ',as.numeric(pH1)*100,'%, then the chance to reach at ',ifelse(increase, 'least', 'most'),' ',n.needed.for.greater.p0,' patients with ',outcomeLabel,' at end of the study is ',round(sensitivity.data[paste(pH1),2],2),', and the corresponding probability to stop the treatment early is ',round(sensitivity.data[paste(pH1),1],2)*100,'%.')
     
     
+    a1_summary <- paste0('Futility evaluation is implemented in ',length(n.predictive.cutoff),ifelse(length(n.predictive.cutoff) == 1,' interim analysis',' interim analyses'),', for the first ',paste(cumsum(n.list[-length(n.list)]),collapse = ', '),' patients. With an unfavorable rate set at ',round(pTarget*100),'% and posterior probability of ', theta,', a total of at least ', n.needed.for.greater.p0, ' of the ', sum(n.list),' total patients must have ', outcomeLabel, ' to expect a difference could be detected. Given a ',round(cutoffPredictive*100),'% cutoff of the predictive probability (i.e. chance needed to ultimately see a difference, given the results from the ', ifelse(length(n.predictive.cutoff) == 1,' interim analysis',' interim analyses'), ') the stopping rule (Table 1) will be: the trial will be stopped if there are ',ifelse(length(n.list) == 2,paste(n.predictive.cutoff,' or ',ifelse(increase, 'less', 'more'),' patients with ',outcomeLabel,' in the 1st interim analysis. ',sep = ''),paste(paste(paste(n.predictive.cutoff.text[-length(n.predictive.cutoff)],collapse = ', '),n.predictive.cutoff.text[length(n.predictive.cutoff)],sep = ', and '),' or ',ifelse(increase, 'less', 'more'),' patients with ',outcomeLabel,' in the 1st to ',stage.index,' interim analysis, respectively. ',sep = '')), ' \n \n Sensitivity analysis (Figure 2 and Table 3) shows that if the true rate of ',outcomeLabel,' is ',round(pTarget*100),'%, the chance to reach at ',ifelse(increase, 'least', 'most'),' a total of ',n.needed.for.greater.p0,' patients with ',outcomeLabel,' at end of the study is ',round(sensitivity.data[as.numeric(dimnames(sensitivity.data)[[1]]) == pTarget,2],2),' (Type I error), however the probability to stop the trial early is ',round(sensitivity.data[as.numeric(dimnames(sensitivity.data)[[1]]) == pTarget,1],2)*100 ,'%. \n \n If true rate of ',outcomeLabel,' is indeed ',as.numeric(pH1)*100,'%, then the chance to reach at ',ifelse(increase, 'least', 'most'),' ',n.needed.for.greater.p0,' patients with ',outcomeLabel,' at end of the study is ',round(sensitivity.data[paste(pH1),2],2),', and the corresponding probability to stop the treatment early is ',round(sensitivity.data[paste(pH1),1],2)*100,'%.')
+                         
+                         
+                         
     a2 <- paste('Application of Bayesian predictive probability for interim analysis in single-arm early phase II trial. Chen et al; submitted.')
     
-    tmp98 <- list(a1 = a1,
+    tmp98 <- list(a1_summary = a1_summary,
+                  a1 = a1,
                   a2 = a2,
                   n.needed.for.greater.p0 = n.needed.for.greater.p0,
                   n.predictive.cutoff = n.predictive.cutoff,
@@ -164,6 +173,10 @@ server <- function(input,output){
     return(tmp98)
   })
   
+  
+  output$summary <- renderText({
+    get.result.futility()$a1_summary
+  })
   
   output$futility <- renderText({
     get.result.futility()$a1
@@ -201,7 +214,7 @@ server <- function(input,output){
         stage.index <- ifelse(my_j == 1,' 1st ',ifelse(my_j == 2,' 2nd ',ifelse(my_j == 3,' 3rd ',paste(' ',my_j,'th ',sep = ''))))
         aa <- aa.list[[my_j]][,3:5,drop = F]
         outcomeLabel <- aa0$outcomeLabel
-        dimnames(aa)[[2]] <- c(paste('number of patients with ', outcomeLabel,' in the ',stage.index,' interim analysis',sep = ''),paste(ifelse(aa0$increase, 'minimum', 'maximum'),' number of patients with ',outcomeLabel,' ',ifelse(aa0$increase, 'needed', 'allowed'),' in the furture remaining patients',sep = ''),'predictive probability')
+        dimnames(aa)[[2]] <- c(paste('number of patients with ', outcomeLabel,' in the ',stage.index,' interim analysis',sep = ''),paste(ifelse(aa0$increase, 'minimum', 'maximum'),' number of patients with ',outcomeLabel,' ',ifelse(aa0$increase, 'needed', 'allowed'),' in the future remaining patients',sep = ''),'predictive probability')
         output[[tablename]] <- renderTable({
           aa
         })
@@ -251,7 +264,7 @@ server <- function(input,output){
       axis(1,1:dim(tmp3)[1],tmp3[,3],cex.axis = 1.2)
       axis(3,1:dim(tmp3)[1],tmp3[,4],cex.axis = 1)
       abline(h = predictive.cutoff,col = 2,lty = 2)
-      mtext(paste(ifelse(res$increase, 'minimum', 'maximum'),' number of patients with ',outcomeLabel,' ',ifelse(res$increase, 'needed', 'allowed'),' in the furture remaining ', n2,' patients',sep = ''),side = 3,line = 1.8)
+      mtext(paste(ifelse(res$increase, 'minimum', 'maximum'),' number of patients with ',outcomeLabel,' ',ifelse(res$increase, 'needed', 'allowed'),' in the future remaining ', n2,' patients',sep = ''),side = 3,line = 1.8)
       title(paste(stage.index,' Interim Analysis of for Futility \n\n',sep = ''))
       arrows(kk2.len, 1, kk2.len, y1 = 0.1,col = 3,lwd = 3)
       text(1:dim(tmp3)[1],tmp3[,5],round(tmp3[,5],2),col = 2,cex = 2)
@@ -313,7 +326,7 @@ server <- function(input,output){
           axis(1,1:dim(tmp3)[1],tmp3[,3],cex.axis = 1.2)
           axis(3,1:dim(tmp3)[1],tmp3[,4],cex.axis = 1)
           abline(h = predictive.cutoff,col = 2,lty = 2)
-          mtext(paste(ifelse(res$increase, 'minimum', 'maximum'),' number of patients with ',outcomeLabel,' ',ifelse(res$increase, 'needed', 'allowed'),' in the furture remaining ', n2,' patients',sep = ''),side = 3,line = 1.8)
+          mtext(paste(ifelse(res$increase, 'minimum', 'maximum'),' number of patients with ',outcomeLabel,' ',ifelse(res$increase, 'needed', 'allowed'),' in the future remaining ', n2,' patients',sep = ''),side = 3,line = 1.8)
           title(paste(stage.index,' Interim Analysis of for Futility \n\n',sep = ''))
           arrows(kk2.len, 1, kk2.len, y1 = 0.1,col = 3,lwd = 3)
           text(1:dim(tmp3)[1],tmp3[,5],round(tmp3[,5],2),col = 2,cex = 2)

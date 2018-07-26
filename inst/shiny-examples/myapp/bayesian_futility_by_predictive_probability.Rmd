@@ -14,7 +14,6 @@ library(shiny)
 library(knitr)
 library(rmarkdown)
 library(extraDistr)
-#library(kableExtra)
 
 options(scipen = 3)
 #options(knitr.table.format  =  "latex")
@@ -37,14 +36,19 @@ if (tmp99$pH1 > tmp99$pTarget)
 
 ```
 
-# Interim Analysis for Futility 
+# Summary of Interim Analysis for Futility 
 
+```{r, echo = FALSE, results = 'asis'}
+cat(tmp99$a1_summary)
+```
+
+## Details
 
 ```{r, echo = FALSE, results = 'asis'}
 cat(tmp99$a1)
 ```
 
-# Table 0: Stopping Boundary for Futility
+# Table 1: Stopping Boundary for Futility
 
 ```{r, echo = FALSE, results = 'asis'}
  
@@ -54,11 +58,11 @@ cat(tmp99$a1)
     cutoff.tmp[cutoff.tmp == (-99)] <- 'PASS'
     aa <- rbind(c(1:(length(aa) - 1),'Final'),cumsum(aa),aa,cutoff.tmp)
     dimnames(aa)[[1]] <- c('Stage of interim analysis','Sample size up to the current stage','Sample size at each stage','Stopping boundary')
-    print(kable(aa))
+    print(knitr::kable(aa))
   
 ``` 
  
-# Table 1: Bayesian Predictive Probability 
+# Table 2: Bayesian Predictive Probability 
 
 ```{r, echo = FALSE, results = 'asis'}
 
@@ -71,14 +75,14 @@ cat(tmp99$a1)
       aa <- aa.list[[my_j]][,3:5,drop = F]
       aa[,dim(aa)[2]] <- round(aa[,dim(aa)[2]],3)
       outcomeLabel <- aa0$outcomeLabel
-      dimnames(aa)[[2]] <- c(paste('number of patients with ', outcomeLabel,' in the ',stage.index,' interim analysis',sep = ''),paste('minimum number of patients with ',outcomeLabel,' needed in the furture remaining patients',sep = ''),'predictive probability')
-      print(kable(aa))
+      dimnames(aa)[[2]] <- c(paste('number of patients with ', outcomeLabel,' in the ',stage.index,' interim analysis',sep = ''),paste('minimum number of patients with ',outcomeLabel,' needed in the future remaining patients',sep = ''),'predictive probability')
+      print(knitr::kable(aa))
 
     }
     
 ```
 
-# Table 2: Sensitivity Analysis 
+# Table 3: Sensitivity Analysis 
 
 ```{r, echo = FALSE, results = 'asis'}
 
@@ -87,7 +91,7 @@ aa <- round(aa,2)
     outcomeLabel <- tmp99$outcomeLabel
     aa <- cbind(as.numeric(dimnames(aa)[[1]]),aa)
     dimnames(aa)[[2]] <- c('true rate',' overall probability of early stopping the trial',paste('probability to have at ',ifelse(increase, 'least', 'most'),' ',aa0$n.needed.for.greater.p0,' patients with ',aa0$outcomeLabel,sep = ''))
-  kable(aa)
+  knitr::kable(aa)
   
     
 ```
@@ -122,7 +126,7 @@ aa <- round(aa,2)
         axis(1,1:dim(tmp3)[1],tmp3[,3],cex.axis = 1.2)
         axis(3,1:dim(tmp3)[1],tmp3[,4],cex.axis = 1)
         abline(h = predictive.cutoff,col = 2,lty = 2)
-        mtext(paste(ifelse(increase, 'minimum', 'maximum'),' number of patients with ',outcomeLabel,' ',ifelse(increase, 'needed', 'allowed'),' in the furture remaining ', n2,' patients',sep = ''),side = 3,line = 1.8)
+        mtext(paste(ifelse(increase, 'minimum', 'maximum'),' number of patients with ',outcomeLabel,' ',ifelse(increase, 'needed', 'allowed'),' in the future remaining ', n2,' patients',sep = ''),side = 3,line = 1.8)
         title(paste(stage.index,' Interim Analysis of for Futility \n\n',sep = ''))
         arrows(kk2.len, 1, kk2.len, y1  =  0.1,col = 3,lwd = 3)
         text(1:dim(tmp3)[1],tmp3[,5],round(tmp3[,5],2),col = 2,cex = 2)
