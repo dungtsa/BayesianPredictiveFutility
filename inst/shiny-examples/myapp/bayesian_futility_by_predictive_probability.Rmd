@@ -34,6 +34,10 @@ if (tmp99$pH1 > tmp99$pTarget)
   increase <- TRUE else
     increase <- FALSE
 
+if (ncol(tmp99$sensitivity.data.ind) > 3) 
+  run_fig_3 <- TRUE else
+    run_fig_3 <- FALSE
+
 ```
 
 # Summary of Interim Analysis for Futility 
@@ -162,9 +166,9 @@ aa <- round(aa,2)
 
 ```
 
-# Figure 3: Probability of Stopping Early by Each Interim Analysis
+`r if (run_fig_3) '# Figure 3: Probability of Stopping Early by Each Interim Analysis'`
 
-```{r, echo = FALSE, results = 'asis',fig.height = 16,fig.width = 14,dpi = 600}
+```{r, echo = FALSE, results = 'asis',fig.height = 16,fig.width = 14,dpi = 600, eval = ifelse(run_fig_3,T,F)}
     res  <-   tmp99
     tmp5 <- res$sensitivity.data
     tmp5.ind <- res$sensitivity.data.ind

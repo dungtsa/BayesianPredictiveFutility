@@ -20,7 +20,7 @@ ui <- fluidPage(
       actionButton("Submit","Calculate"),
       radioButtons('format', 'Document format', c('Word','PDF', 'HTML' ),
                    inline = TRUE),
-      downloadButton('downloadReportIncrease')
+      downloadButton('downloadReport')
     ),
     
     mainPanel(
@@ -138,10 +138,10 @@ server <- function(input,output){
               \n \n The predictive probability is also calculated for each of the remaining interim analyses to evaluate the chance of ',n.needed.for.greater.p0,'-s or ',ifelse(increase, 'more', 'less'),' patients with ',outcomeLabel,' in the future remaining patients given s patients with ',outcomeLabel,' in the current stage of interim analysis. ',
                 ' Figure 1 and Table 2 lists predictive probability for all scenarios of number of patients with ',outcomeLabel,' in each interim analysis and the associated largest number of patients with ',outcomeLabel,' needed in the future remaining patients to have at ',ifelse(increase, 'least', 'most'),' a total of ',n.needed.for.greater.p0,' patients with ',outcomeLabel,'. ', 
                 ' \n \n We consider that a ',round(cutoffPredictive*100),'% cutoff of the predictive probability will give little chance to have ',n.needed.for.greater.p0,' patients or ',ifelse(increase, 'more', 'less'),' with ',outcomeLabel,' at the end of study. Thus with this cutoff, the stopping rule (Table 1) will be: the trial will be stopped if there are ',ifelse(length(n.list) == 2,paste(n.predictive.cutoff,' or ',ifelse(increase, 'less', 'more'),' patients with ',outcomeLabel,' in the 1st interim analysis. ',sep = ''),paste(paste(paste(n.predictive.cutoff.text[-length(n.predictive.cutoff)],collapse = ', '),n.predictive.cutoff.text[length(n.predictive.cutoff)],sep = ', and '),' or ',ifelse(increase, 'less', 'more'),' patients with ',outcomeLabel,' in the 1st to ',stage.index,' interim analysis, respectively. ',sep = '')),
-                ' Sensitivity analysis (Figure 2 and Table 3) for this stopping rule shows that if the true rate of ',outcomeLabel,' is ',round(pTarget*100),'%, the chance to reach at ',ifelse(increase, 'least', 'most'),' a total of ',n.needed.for.greater.p0,' patients with ',outcomeLabel,' at end of the study is ',round(sensitivity.data[as.numeric(dimnames(sensitivity.data)[[1]]) == pTarget,2] * 100),'% (Type I error), however the probability to stop the trial early is ',round(sensitivity.data[as.numeric(dimnames(sensitivity.data)[[1]]) == pTarget,1],2)*100 ,'%. \n \n When the true rate of ',outcomeLabel,' is ',as.numeric(pH1)*100,'%, then the chance to reach at ',ifelse(increase, 'least', 'most'),' ',n.needed.for.greater.p0,' patients with ',outcomeLabel,' at end of the study is ',round(sensitivity.data[paste(pH1),2] * 100),'%, and the corresponding probability to stop the treatment early is ',round(sensitivity.data[paste(pH1),1],2)*100,'%.')
+                ' Sensitivity analysis (Figure 2 and Table 3) for this stopping rule shows that if the true rate of ',outcomeLabel,' is ',round(pTarget*100),'%, the chance to reach at ',ifelse(increase, 'least', 'most'),' a total of ',n.needed.for.greater.p0,' patients with ',outcomeLabel,' at end of the study is ',round(sensitivity.data[as.numeric(dimnames(sensitivity.data)[[1]]) == pTarget,2] * 100),'% (Type I error), however the probability to stop the trial early is ',round(sensitivity.data[as.numeric(dimnames(sensitivity.data)[[1]]) == pTarget,1],2)*100 ,'%. \n \n When the true rate of ',outcomeLabel,' is ',as.numeric(pH1)*100,'%, then the chance to reach at ',ifelse(increase, 'least', 'most'),' ',n.needed.for.greater.p0,' patients with ',outcomeLabel,' at end of the study is ',round(sensitivity.data[paste(pH1),2] * 100),'%, and the corresponding probability to stop the treatment early is ',round(sensitivity.data[paste(pH1),1],2)*100,'%.',ifelse(ncol(sensitivity.data.ind) > 3,' \n \n Figure 3 shows the probability of stopping at each interim analysis.',''))
     
     
-    a1_summary <- paste0('Futility evaluation is implemented in ',length(n.predictive.cutoff),ifelse(length(n.predictive.cutoff) == 1,' interim analysis',' interim analyses'),', with stops at the first ',paste(cumsum(n.list[-length(n.list)]),collapse = ', '),' patients, and ', n.list[length(n.list)],' patients in the last stage, for a total of ',sum(n.list),' patients . With an unfavorable rate set at ',round(pTarget*100),'% and posterior probability of ', theta,', a total of at least ', n.needed.for.greater.p0, ' of the ', sum(n.list),' patients must have ', outcomeLabel, ' to be able to detect a difference. Given a ',round(cutoffPredictive*100),'% cutoff of the predictive probability (i.e. chance needed to ultimately see a difference, given the results from the ', ifelse(length(n.predictive.cutoff) == 1,' interim analysis',' interim analyses'), ') the stopping rule (Table 1) will be: the trial will be stopped if there are ',ifelse(length(n.list) == 2,paste(n.predictive.cutoff,' or ',ifelse(increase, 'less', 'more'),' patients with ',outcomeLabel,' in the 1st interim analysis. ',sep = ''),paste(paste(paste(n.predictive.cutoff.text[-length(n.predictive.cutoff)],collapse = ', '),n.predictive.cutoff.text[length(n.predictive.cutoff)],sep = ', and '),' or ',ifelse(increase, 'less', 'more'),' patients with ',outcomeLabel,' in the 1st to ',stage.index,' interim analysis, respectively. ',sep = '')), ' \n \n Sensitivity analysis (Figure 2 and Table 3) shows that if the true rate of ',outcomeLabel,' is ',round(pTarget*100),'%, the chance to reach at ',ifelse(increase, 'least', 'most'),' a total of ',n.needed.for.greater.p0,' patients with ',outcomeLabel,' at end of the study is ',round(sensitivity.data[as.numeric(dimnames(sensitivity.data)[[1]]) == pTarget,2] * 100),'% (Type I error), however the probability to stop the trial early is ',round(sensitivity.data[as.numeric(dimnames(sensitivity.data)[[1]]) == pTarget,1],2)*100 ,'%. \n \n If true rate of ',outcomeLabel,' is indeed ',as.numeric(pH1)*100,'%, then the chance to reach at ',ifelse(increase, 'least', 'most'),' ',n.needed.for.greater.p0,' patients with ',outcomeLabel,' at end of the study is ',round(sensitivity.data[paste(pH1),2] * 100),'%, and the corresponding probability to stop the treatment early is ',round(sensitivity.data[paste(pH1),1],2)*100,'%.')
+    a1_summary <- paste0('Futility evaluation is implemented in ',length(n.predictive.cutoff),ifelse(length(n.predictive.cutoff) == 1,' interim analysis',' interim analyses'),', with stops at the first ',paste(cumsum(n.list[-length(n.list)]),collapse = ', '),' patients, with ', n.list[length(n.list)],' patients in the last stage, for a total of ',sum(n.list),' patients . With an unfavorable rate set at ',round(pTarget*100),'% and posterior probability of ', theta,', a total of at least ', n.needed.for.greater.p0, ' of the ', sum(n.list),' patients must have ', outcomeLabel, ' to be able to detect a difference. Given a ',round(cutoffPredictive*100),'% cutoff of the predictive probability (i.e. chance needed to ultimately see a difference, given the results from the ', ifelse(length(n.predictive.cutoff) == 1,' interim analysis',' interim analyses'), ') the stopping rule (Table 1) will be: the trial will be stopped if there are ',ifelse(length(n.list) == 2,paste(n.predictive.cutoff,' or ',ifelse(increase, 'less', 'more'),' patients with ',outcomeLabel,' in the 1st interim analysis. ',sep = ''),paste(paste(paste(n.predictive.cutoff.text[-length(n.predictive.cutoff)],collapse = ', '),n.predictive.cutoff.text[length(n.predictive.cutoff)],sep = ', and '),' or ',ifelse(increase, 'less', 'more'),' patients with ',outcomeLabel,' in the 1st to ',stage.index,' interim analysis, respectively. ',sep = '')), ' \n \n Sensitivity analysis (Figure 2 and Table 3) shows that if the true rate of ',outcomeLabel,' is ',round(pTarget*100),'%, the chance to reach at ',ifelse(increase, 'least', 'most'),' a total of ',n.needed.for.greater.p0,' patients with ',outcomeLabel,' at end of the study is ',round(sensitivity.data[as.numeric(dimnames(sensitivity.data)[[1]]) == pTarget,2] * 100),'% (Type I error), however the probability to stop the trial early is ',round(sensitivity.data[as.numeric(dimnames(sensitivity.data)[[1]]) == pTarget,1],2)*100 ,'%. \n \n If true rate of ',outcomeLabel,' is indeed ',as.numeric(pH1)*100,'%, then the chance to reach at ',ifelse(increase, 'least', 'most'),' ',n.needed.for.greater.p0,' patients with ',outcomeLabel,' at end of the study is ',round(sensitivity.data[paste(pH1),2] * 100),'%, and the corresponding probability to stop the treatment early is ',round(sensitivity.data[paste(pH1),1],2)*100,'%.')
                          
                          
                          
@@ -168,8 +168,6 @@ server <- function(input,output){
                   betaB = betaB,
                   kk2.len.list = kk2.len.list
     )
-     save(tmp98,file = 'F:/Temp/tmp98.RData')
-    # print(sensitivity.data.ind)
     return(tmp98)
   })
   
@@ -390,22 +388,25 @@ server <- function(input,output){
     
     dim.n <- dim(tmp5.ind)[2]
     
-    for (j in 1:(dim.n - 1))
-    {
-      local({
-        my_j <- j
-        plotname <- paste("SenIndplot", my_j, sep = "")
-        output[[plotname]] <- renderPlot({
-          aa1 <- barplot(tmp5.ind[,my_j],xlab = paste('Rate of ',outcomeLabel,sep = ''),ylab = paste('Probability of early stopping the trial at interim',j),main = paste('Interim Analysis: ',my_j,'\n Probability of early stopping the trial',sep = ''),lwd = 3,cex.lab = 1.5,ylim = c(0,1),cex.main = 2,cex.lab = 1.5,cex.axis = 1.5,cex = 1.5)
-          text(aa1,tmp5.ind[,my_j],round(tmp5.ind[,my_j],2),col = 2,cex = 2)
+    #If just one interim analysis this plot is redundant, so excluding
+    if (dim.n > 3) {
+      for (j in 1:(dim.n - 1))
+      {
+        local({
+          my_j <- j
+          plotname <- paste("SenIndplot", my_j, sep = "")
+          output[[plotname]] <- renderPlot({
+            aa1 <- barplot(tmp5.ind[,my_j],xlab = paste('Rate of ',outcomeLabel,sep = ''),ylab = paste('Probability of early stopping the trial at interim',j),main = paste('Interim Analysis: ',my_j,'\n Probability of early stopping the trial',sep = ''),lwd = 3,cex.lab = 1.5,ylim = c(0,1),cex.main = 2,cex.lab = 1.5,cex.axis = 1.5,cex = 1.5)
+            text(aa1,tmp5.ind[,my_j],round(tmp5.ind[,my_j],2),col = 2,cex = 2)
+          })
         })
-      })
+      }
     }
   })
   
   
   
-  output$downloadReportIncrease <- downloadHandler(
+  output$downloadReport <- downloadHandler(
     filename = function() {
       paste('bayesian_futility_by_predictive_probability', sep = '.', switch(
         input$format, PDF = 'pdf', HTML = 'html', Word = 'docx'
