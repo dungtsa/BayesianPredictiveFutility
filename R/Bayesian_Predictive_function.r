@@ -21,6 +21,7 @@
 Bayesian.predictive.futility.increase.fun<-
   function(n.list,p.target=0.3,cutoff.n.for.greater.p0=0.9,predictive.cutoff=0.05,beta.a=1,beta.b=1,outcome.tmp='response',arm.name='B',p.h1=.5,sim.n=10000,plot.status=F)
   {
+    if (p.target > p.h1) stop('"p.target" can not be greater than "p.h1". Considering using "Bayesian.predictive.futility.reduction.fun"')
     #pbbinom(x,n2,beta.a+k,beta.b+(n1-k)): prob(X<=x|beta(a,b,k))
     # so prob(X>x)= 1- pbbinom(x,n2,beta.a+k,beta.b+(n1-k))
     # therefore, it becomes prob(X>=1), prob(X>=2),...,prob(X>=n2)
@@ -272,6 +273,8 @@ Bayesian.predictive.futility.increase.fun<-
 Bayesian.predictive.futility.reduction.fun<-
   function(n.list,p.target=0.27,cutoff.n.for.greater.p0=0.9,predictive.cutoff=0.05,beta.a=1,beta.b=1,outcome.tmp='event',arm.name='B',p.h1=.17,sim.n=10000,plot.status=F)
   {
+    if (p.target < p.h1) stop('"p.target" can not be less than "p.h1". Considering using "Bayesian.predictive.futility.increase.fun"')
+    
     beta.a<-beta.a+10^(-100)
     beta.b<-beta.b+10^(-100)
     
