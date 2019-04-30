@@ -12,29 +12,17 @@ The tool provides futility interim analysis plan using the Bayesian predictive d
 Simply run the following from an R console:
 
 ```r
-if (!require("devtools"))
-  install.packages("devtools")
-devtools::install_github("dungtsa/BayesianPredictiveFutility",force = TRUE)
+cred = git2r::cred_ssh_key(
+	publickey = "MYPATH/.ssh/id_rsa.pub", 
+	privatekey = "MYPATH/.ssh/id_rsa")
+
+devtools::install_git("git@gitlab.moffitt.usf.edu:petterhf/BayesianPredFutilPkg.git", 
+					  credentials = cred)
 ```
 
 ## Getting Started
 
 ```r
-require("BayesianPredictiveFutility")
-Bayesian_predictive_Shinny_app()
+library("BayesianPredictiveFutility")
+Bayesian_Predictive_App()
 ```
--------------------------------
-Snapshot of shiny app: initial 
-![snapshot of shiny app: initial](inst/img/shiny1.png)
-
--------------------------------
-Snapshot of shiny app: output
-![snapshot of shiny app: output](inst/img/shiny2.png)
-
--------------------------------
-Snapshot of shiny app: output in Word format (through "download" button)
-![snapshot of shiny app: output](inst/img/shiny3.png)
-
-output
-![output](Supplementary_Simulation_prior_distribution.pdf)
-
