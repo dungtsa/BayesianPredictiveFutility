@@ -1,12 +1,16 @@
 Package: BayesianPredictiveFutility
 Type: Package
-Title: Bayesian predictive probability for interim analysis in single-arm early phase II trial
-Version: 0.2.0
-Authors@R: c(person("Dung-Tsa", "Chen", email = "Dung-Tsa.Chen@moffitt.org", role = c("aut", "cre")), person("William", "Fulp",  email = "William.Fulp@moffitt.org", role = "aut"))
-Description: An tool to generate a statistical plan
-    for a randomized early phase II clinicla trial.
-License: GPL-3
+Title: Interim Analysis for Futility Using Bayesian Predictive Probability
+Version: 0.1.0
+Authors@R: c(person("Fredrik", "Pettersson",  email = "Fredrik.Pettersson@moffitt.org", role = c("aut", "cre")),
+             person("Jimmy", "Fulp",  email = "William.Fulp@moffitt.org", role = "aut"),
+             person("Dung-Tsa", "Chen",  email = "Dung-Tsa.Chen@moffitt.org", role = "aut")
+             )
+Authors: Fredrik Pettersson, William (Jimmy) Fulp, Dung-Tsa Chen
+Maintainer: Fredrik Pettersson <fredrik.pettersson@moffitt.org>
+Description: Interim Analysis for Futility Using Bayesian Predictive Probability
+License: MIT + LICENSE.txt
 Encoding: UTF-8
-Imports: knitr, rmarkdown, extraDistr, shiny
+Imports: knitr, rmarkdown, extraDistr, shiny, logging, kableExtra
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
