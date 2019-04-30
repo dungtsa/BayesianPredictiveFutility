@@ -34,3 +34,7 @@ Snapshot of shiny app: output
 -------------------------------
 Snapshot of shiny app: output in Word format (through "download" button)
 ![snapshot of shiny app: output](inst/img/shiny3.png)
+
+output
+![output](Supplementary_Simulation_prior_distribution.pdf)
+
