@@ -29,7 +29,7 @@ Bayesian_Predictive_App()
 
 -------------------------------
 Procedure of BayesianPredictiveFutility R Shiny App 
-![snapshot of procedure](Example/ProcedureOfBayesianPredictiveFutilityRShinyApp.tiff)
+![snapshot of procedure](Example/ProcedureOfBayesianPredictiveFutilityRShinyApp.png)
 
 -------------------------------
 Example of two-stage case
