@@ -27,13 +27,10 @@ library("BayesianPredictiveFutility")
 Bayesian_Predictive_App()
 ```
 
-Snapshot of shiny app: initial 
+-------------------------------
+Procedure of BayesianPredictiveFutility R Shiny App  
 ![snapshot of shiny app: initial](inst/img/ProcedureOfBayesianPredictiveFutilityRShinyApp.png)
 
 -------------------------------
-Procedure of BayesianPredictiveFutility R Shiny App 
-![snapshot of procedure](Example/ProcedureOfBayesianPredictiveFutilityRShinyApp.png)
-
--------------------------------
 Example of two-stage case
-![snapshot of two-stage case](Example/Demonstration_Two_Stage.pdf)
+![snapshot of two-stage case](inst/img/Demonstration_Two_Stage.pdf)
