@@ -33,7 +33,7 @@ ui <- fluidPage(
       textInput('outcomeLabel', label = 'Name of outcome', value = "response"),
       textInput('armLabel', label = 'Name of the Arm', value = "treatment"),
       actionButton("CalculateButton", "Calculate"),
-      radioButtons('format', 'Document format', c('Word', 'PDF', 'HTML'),
+      radioButtons('format', 'Document format', c('Word', 'PDF'),
                    inline = TRUE),
       downloadButton('downloadReport')
     ),
