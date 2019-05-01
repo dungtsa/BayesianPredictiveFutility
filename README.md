@@ -33,4 +33,12 @@ Procedure of BayesianPredictiveFutility R Shiny App
 
 -------------------------------
 Example of two-stage case
-![snapshot of two-stage case](inst/img/Demonstration_Two_Stage.pdf)
+![Example of two-stage case](Example/Demonstration_Two_Stage.pdf)
+
+-------------------------------
+Example of three-stage case
+![Example of three-stage case](Example/Demonstration_Three_Stage.pdf)
+
+-------------------------------
+Example of multi-stage case
+![Example of multi-stage case](Example/Demonstration_Multi_Stage.pdf)
