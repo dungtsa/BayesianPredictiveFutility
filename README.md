@@ -27,6 +27,9 @@ library("BayesianPredictiveFutility")
 Bayesian_Predictive_App()
 ```
 
+Snapshot of shiny app: initial 
+![snapshot of shiny app: initial](inst/img/ProcedureOfBayesianPredictiveFutilityRShinyApp.png)
+
 -------------------------------
 Procedure of BayesianPredictiveFutility R Shiny App 
 ![snapshot of procedure](Example/ProcedureOfBayesianPredictiveFutilityRShinyApp.png)
