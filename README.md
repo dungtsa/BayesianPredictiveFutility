@@ -26,3 +26,11 @@ devtools::install_git("git@gitlab.moffitt.usf.edu:petterhf/BayesianPredFutilPkg.
 library("BayesianPredictiveFutility")
 Bayesian_Predictive_App()
 ```
+
+-------------------------------
+Procedure of BayesianPredictiveFutility R Shiny App 
+![snapshot of procedure](Example/Procedure of BayesianPredictiveFutility R Shiny App.png)
+
+-------------------------------
+Example of two-stage case
+![snapshot of two-stage case](Example/Demonstration_Two_Stage.pdf)
