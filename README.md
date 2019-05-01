@@ -20,11 +20,19 @@ devtools::install_git("git@gitlab.moffitt.usf.edu:petterhf/BayesianPredFutilPkg.
 					  credentials = cred)
 ```
 
-## Getting Started
+## Getting Started from an R console
 
 ```r
 library("BayesianPredictiveFutility")
 Bayesian_Predictive_App()
+```
+
+Or the following from an R console:
+
+```r
+if (!require("devtools"))
+  install.packages("devtools")
+devtools::install_github("dungtsa/PowerPredictiveBiomarker",force = TRUE)
 ```
 
 -------------------------------
