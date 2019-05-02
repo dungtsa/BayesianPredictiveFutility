@@ -11,16 +11,6 @@ The tool provides futility interim analysis plan using the Bayesian predictive d
 
 Simply run the following from an R console:
 
-```r
-cred = git2r::cred_ssh_key(
-	publickey = "MYPATH/.ssh/id_rsa.pub", 
-	privatekey = "MYPATH/.ssh/id_rsa")
-
-devtools::install_git("git@gitlab.moffitt.usf.edu:petterhf/BayesianPredFutilPkg.git", 
-					  credentials = cred)
-```
-
-Or the following from an R console:
 
 ```r
 if (!require("devtools"))
