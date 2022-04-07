@@ -7,7 +7,18 @@
 calcBetabinProbabilities(n1, n2, beta.a, beta.b, INCREASE = TRUE)
 }
 \arguments{
-\item{increase}{}
+\item{n1}{n1}
+
+\item{n2}{n2}
+
+\item{beta.a}{beta.a}
+
+\item{beta.b}{beta.b}
+
+\item{increase}{True (default) or false}
+}
+\value{
+
 }
 \description{
 Calculate beta binomial probabilities for both increase and reduce scenario

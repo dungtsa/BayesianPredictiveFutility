@@ -4,14 +4,45 @@
 \alias{evaluateInterim}
 \title{Main function for calculating statistics for the interim study design}
 \usage{
-evaluateInterim(ns, p.target = 0.2, cutoff.n.for.greater.p0 = 0.95,
-  predictive.cutoff = 0.05, beta.a = 1, beta.b = 1,
-  outcome.tmp = "response", arm.name = "B", p.h1 = 0.4,
-  analysis.type = c("Analytical", "Simulation"), sim.n = 10000,
-  seed = 42534253)
+evaluateInterim(
+  ns,
+  p.target = 0.2,
+  cutoff.n.for.greater.p0 = 0.95,
+  predictive.cutoff = 0.05,
+  beta.a = 1,
+  beta.b = 1,
+  outcome.tmp = "response",
+  arm.name = "B",
+  p.h1 = 0.4,
+  analysis.type = c("Analytical", "Simulation"),
+  sim.n = 10000,
+  seed = 42534253
+)
 }
 \arguments{
-\item{seed}{}
+\item{ns}{ns}
+
+\item{p.target}{p.target}
+
+\item{cutoff.n.for.greater.p0}{cutoff.n.for.greater.p0}
+
+\item{predictive.cutoff}{predictive.cutoff}
+
+\item{beta.a}{beta.a}
+
+\item{beta.b}{beta.b}
+
+\item{outcome.tmp}{outcome.tmp}
+
+\item{arm.name}{arm.name}
+
+\item{p.h1}{p.h1}
+
+\item{analysis.type}{analysis.type}
+
+\item{sim.n}{sim.n}
+
+\item{seed}{seed value}
 }
 \value{
 

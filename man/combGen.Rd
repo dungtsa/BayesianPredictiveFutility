@@ -19,6 +19,9 @@ combGen(stages, currStage, sizes, sizesCum, reqCum, values)
 
 \item{values}{a list for recursively passing on combinations vector for storing in global list}
 }
+\value{
+
+}
 \description{
 A function for generating outcome combinations for calculations using analytic form
 }

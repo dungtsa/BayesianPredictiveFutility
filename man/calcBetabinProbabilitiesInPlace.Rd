@@ -7,7 +7,16 @@
 calcBetabinProbabilitiesInPlace(n1, n2, beta.a, beta.b)
 }
 \arguments{
-\item{beta.b}{}
+\item{n1}{n1}
+
+\item{n2}{n2}
+
+\item{beta.a}{beta.a}
+
+\item{beta.b}{beta.b value}
+}
+\value{
+
 }
 \description{
 More efficient implementation for calculating beta binomial distributions, overcoming performance drawback with r-style pushing to arrays

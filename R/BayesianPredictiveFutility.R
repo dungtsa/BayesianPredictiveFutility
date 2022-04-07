@@ -153,11 +153,11 @@ analyticForm <- function(single_pp,nn.list,passCombinations, INCREASE) {
 
 #' Calculate beta binomial probabilities for increase scenario
 #'
-#' @param n1
-#' @param n2
-#' @param beta.a
-#' @param beta.b
-#' @param k
+#' @param n1 n1
+#' @param n2 n1
+#' @param beta.a beta.a
+#' @param beta.b beta.b
+#' @param k k value
 #'
 #' @return
 #' @export
@@ -177,11 +177,11 @@ calcPbb <- function(n1,n2,beta.a,beta.b,k,INCREASE = TRUE){
 
 #' Calculate beta binomial probabilities for reduction scenario
 #'
-#' @param n1
-#' @param n2
-#' @param beta.a
-#' @param beta.b
-#' @param k
+#' @param n1 n1
+#' @param n2 n2
+#' @param beta.a beta.a
+#' @param beta.b beta.b
+#' @param k k value
 #'
 #' @return
 #' @export
@@ -198,8 +198,8 @@ calcPbbForReduction <- function(n1,n2,beta.a,beta.b,k){
 #'
 #' @param n1 number of tested patients
 #' @param n2 number of remaining patients
-#' @param betabinProbs
-#' @param n.needed.for.greater.p0
+#' @param betabinProbs betabinProbs
+#' @param n.needed.for.greater.p0 n.needed.for.greater.p0
 #' @param increase boolean value specifying study type, TRUE = increase FALSE = reduce
 #'
 #' @return
@@ -229,11 +229,11 @@ getSuccessProbability <- function(n1,n2,betabinProbs,n.needed.for.greater.p0,inc
 
 #' Simulation based sensitivity analysis
 #'
-#' @param pp
-#' @param n1
-#' @param n2
-#' @param r1
-#' @param r
+#' @param pp pp
+#' @param n1 n1
+#' @param n2 n2
+#' @param r1 r1
+#' @param r r value
 #'
 #' @return
 #' @export
@@ -254,13 +254,13 @@ sensAnalysis <- function(pp,n1,n2,r1,r)
 
 #' Run simulations for sensitivity/power calculations
 #'
-#' @param senrates
-#' @param sim.n
-#' @param n.list
-#' @param n.predictive.cutoff.list
-#' @param n.needed.for.greater.p0
-#' @param incrMode
-#' @param seed
+#' @param senrates senrates
+#' @param sim.n sim.n
+#' @param n.list n.list
+#' @param n.predictive.cutoff.list n.predictive.cutoff.list
+#' @param n.needed.for.greater.p0 n.needed.for.greater.p0
+#' @param incrMode incrMode
+#' @param seed seed value
 #'
 #' @return
 #' @export
@@ -314,10 +314,10 @@ simulateInterims <- function(senrates,sim.n,n.list,n.predictive.cutoff.list,n.ne
 #todo: utilize if performance is an issue
 #' More efficient implementation for calculating beta binomial distributions, overcoming performance drawback with r-style pushing to arrays
 #'
-#' @param n1
-#' @param n2
-#' @param beta.a
-#' @param beta.b
+#' @param n1 n1
+#' @param n2 n2
+#' @param beta.a beta.a
+#' @param beta.b beta.b value
 #'
 #' @return
 #' @export
@@ -354,11 +354,11 @@ calcBetabinProbabilitiesInPlace <- function(n1,n2,beta.a,beta.b) {
 
 #' Calculate beta binomial probabilities for both increase and reduce scenario
 #'
-#' @param n1
-#' @param n2
-#' @param beta.a
-#' @param beta.b
-#' @param increase
+#' @param n1 n1
+#' @param n2 n2
+#' @param beta.a beta.a
+#' @param beta.b beta.b
+#' @param increase True (default) or false
 #'
 #' @return
 #' @export
@@ -371,11 +371,11 @@ calcBetabinProbabilities <- function(n1,n2,beta.a,beta.b,INCREASE = TRUE) {
 
 #' Calculate beta bionomial probabilities
 #'
-#' @param n1
-#' @param n2
-#' @param beta.a
-#' @param beta.b
-#' @param INCREASE
+#' @param n1 n1
+#' @param n2 n2
+#' @param beta.a beta.a
+#' @param beta.b beta.b
+#' @param INCREASE True (default) or false
 #'
 #' @return
 #' @export
@@ -478,18 +478,18 @@ nNeeded <- function(n1,n2, p.target, beta.a, beta.b, cutoff.n.for.greater.p0){
 
 #' Main function for calculating statistics for the interim study design
 #'
-#' @param ns
-#' @param p.target
-#' @param cutoff.n.for.greater.p0
-#' @param predictive.cutoff
-#' @param beta.a
-#' @param beta.b
-#' @param outcome.tmp
-#' @param arm.name
-#' @param p.h1
-#' @param analysis.type
-#' @param sim.n
-#' @param seed
+#' @param ns ns
+#' @param p.target p.target
+#' @param cutoff.n.for.greater.p0 cutoff.n.for.greater.p0
+#' @param predictive.cutoff predictive.cutoff
+#' @param beta.a beta.a
+#' @param beta.b beta.b
+#' @param outcome.tmp outcome.tmp
+#' @param arm.name arm.name
+#' @param p.h1 p.h1
+#' @param analysis.type analysis.type
+#' @param sim.n sim.n
+#' @param seed seed value
 #'
 #' @return
 #'
@@ -502,124 +502,92 @@ nNeeded <- function(n1,n2, p.target, beta.a, beta.b, cutoff.n.for.greater.p0){
 #' @export
 #'
 
-evaluateInterim <-
-  function(ns,p.target = 0.2, cutoff.n.for.greater.p0 = 0.95, predictive.cutoff = 0.05, beta.a = 1, beta.b = 1, outcome.tmp = 'response', arm.name = 'B', p.h1 = .4, analysis.type = c('Analytical', 'Simulation'), sim.n = 10000, seed = 42534253)
-  {
-    analysis.type <- match.arg(analysis.type)
-    if (p.h1 > p.target)
-      INCREASE <- TRUE else
-        INCREASE <- FALSE
-
-    failureCountLengthList <- list()
-
-    successProbList <- list()
-
-
-    beta.a <- beta.a + 10^(-100)
-    beta.b <- beta.b + 10^(-100)
-
-    n.needed.for.greater.p0 <- nNeededFromTotal(ns, p.target, beta.a, beta.b, cutoff.n.for.greater.p0,INCREASE)
-if(!(n.needed.for.greater.p0>0))
+evaluateInterim<-function (ns, p.target = 0.2, cutoff.n.for.greater.p0 = 0.95,
+                           predictive.cutoff = 0.05, beta.a = 1, beta.b = 1, outcome.tmp = "response",
+                           arm.name = "B", p.h1 = 0.4, analysis.type = c("Analytical",
+                                                                         "Simulation"), sim.n = 10000, seed = 42534253)
 {
-  warning('All PASS, no need for stopping')
-  #return('no_stopping')
-  return('All PASS, no need for stopping. You may want to lower beta prior values, increase  sample size or the threshold of the posterior probability for efficacy.  ')
-}
-    nrOfStages <- length(ns)
-
-    #------------------------------------------------------------------------
-    #section for determining the required cumulative number of successes for n-1 stages
-    #------------------------------------------------------------------------
-    n.predictive.cutoff.list <- list()
-    betaBinProbList <- list()
-
-    for (i in 1:(nrOfStages - 1)) {
-
-      testedPatients <- sum(ns[1:i])
-      remainingPatients <- sum(ns[(i + 1):nrOfStages])
-
-      localBetabinProbs <- bbProb(testedPatients,remainingPatients,beta.a,beta.b,INCREASE)
-
-      betaBinProbList[[i]] <- localBetabinProbs
-
-      successProb <- getSuccessProbability(testedPatients,remainingPatients,localBetabinProbs,n.needed.for.greater.p0, INCREASE)
-      successProbList[[i]] = successProb
-
-      failureCounts <- successProb[successProb[,5] < predictive.cutoff,1]
-      failureCountLength <- length(failureCounts)
-
-      if (failureCountLength > 0) {
-        failureCountLengthList[[i]] <- failureCountLength
-        n.predictive.cutoff.list[[i]] <- failureCounts[failureCountLength]
-      } else {
-        failureCountLengthList[[i]] <- (-99)
-
-        if (successProb[1,1] == 0) {
-          n.predictive.cutoff.list[[i]] <- failureCounts[failureCountLength]
-        } else {
-          n.predictive.cutoff.list[[i]] <- successProb[1,1] - 1
-        }
-      }
-
-
-
-    if (length(n.predictive.cutoff.list[[1]]) ==  0 || n.predictive.cutoff.list[[1]] ==  0)
-    {
-    #a1<-n.predictive.cutoff.list
-    #index99<-sapply(a1,function(x) x==0|length(x)==0)
-    #a11<-paste(paste(unlist(a1),' in stage',1:length(a1)),collapse=', ')
-    #a12<-paste('No stopping at',paste(paste('stage',(1:length(index99))[index99]),collapse=', '))
-    warning('With such a low unfavorable p value no events needed for stopping in stage ' ,i, ', hence this method is not appropriate')
-    #a13<-paste(a12,'. Stopping boundary is ',a11, sep='')
-    #return(a13)
-    return(paste('No stopping in the 1st stage. Please increase the sample size in the 1st stage  and rerun the program.'))
-    }
-    }
-
-    #------------------------------------------------------------------------
-
-    pp <- sort(unique(round(c(p.target - c(0.1,0.05,.15,.2,.25,.3), p.target, p.target + c(0.1,0.05,.15,.2,.25,.3),p.h1), 5)))
-    senRates <- pp[(pp > 0) & (pp < 1)]
-
-
-    #------------------------------------------------------------------------
-    #Calculate power and sensitivity using analytic form or simulation
-    #------------------------------------------------------------------------
-      required = c(unlist(n.predictive.cutoff.list),n.needed.for.greater.p0 - 1)
-
-      combinations <<-  list()
-      generateCombinationsRecursively(ns,required)
-
-      #if less than specified number of stages use analytic form
-      if (analysis.type ==  'Analytical')
-      {
-        #---1st to last 2 columns are prob of early stopping for each interim analysis
-        #----last column is power or type I error: prob(pass all stages and # of event <= the curoff)
-        #todo: [important] make sure that the values below are correct
-        # stageSensitivities <- t(apply(t(senRates),2,analyticForm,nn.list = cumsum(ns), combinations))
-        stageSensitivities <- t(apply(t(senRates),2,analyticForm,nn.list = ns, passCombinations = combinations, INCREASE = INCREASE))
-
-
-        prob.stop.name <- paste('prob.stop.interim.',1:(dim(stageSensitivities)[2] - 1),sep = '')
-        dimnames(stageSensitivities) <- list(senRates,c(prob.stop.name,'prob.above.threshold.of.reject.Ho'))
-        sensProbs <- t(apply(stageSensitivities,1,function(x) c(sum(x[-length(x)]),x[length(x)])))
-        dimnames(sensProbs) <- list(senRates,c('prob.stop.overall','prob.above.threshold.of.reject.Ho'))
-
-     } else{
-       # Simulation Method
-        simulateInterims_output <- simulateInterims(senRates,sim.n,ns,n.predictive.cutoff.list, n.needed.for.greater.p0,INCREASE, seed = seed)
-        stageSensitivities <- simulateInterims_output$stageSensitivities
-        sensProbs <- simulateInterims_output$sensitivity.data
-      }
-
-
-      list(n.needed.for.greater.p0 = n.needed.for.greater.p0,
-           n.predictive.cutoff = unlist(n.predictive.cutoff.list),
-           all.data = betaBinProbList,
-           predictive.prob.data = successProbList,
-           sensitivity.data = sensProbs,
-           sensitivity.data.ind = stageSensitivities,
-           kk2.len.list = failureCountLengthList
-      )
-
+  analysis.type <- match.arg(analysis.type)
+  if (p.h1 > p.target)
+    INCREASE <- TRUE
+  else INCREASE <- FALSE
+  failureCountLengthList <- list()
+  successProbList <- list()
+  beta.a <- beta.a + 10^(-100)
+  beta.b <- beta.b + 10^(-100)
+  n.needed.for.greater.p0 <- nNeededFromTotal(ns, p.target,
+                                              beta.a, beta.b, cutoff.n.for.greater.p0, INCREASE)
+  if (!(n.needed.for.greater.p0 > 0)) {
+    warning("All PASS, no need for stopping")
+    return("All PASS, no need for stopping. You may want to lower beta prior values, increase  sample size or the threshold of the posterior probability for efficacy.  ")
   }
+  nrOfStages <- length(ns)
+  n.predictive.cutoff.list <- list()
+  betaBinProbList <- list()
+  for (i in 1:(nrOfStages - 1)) {
+    testedPatients <- sum(ns[1:i])
+    remainingPatients <- sum(ns[(i + 1):nrOfStages])
+    localBetabinProbs <- bbProb(testedPatients, remainingPatients,
+                                beta.a, beta.b, INCREASE)
+    betaBinProbList[[i]] <- localBetabinProbs
+    successProb <- getSuccessProbability(testedPatients,
+                                         remainingPatients, localBetabinProbs, n.needed.for.greater.p0,
+                                         INCREASE)
+    successProbList[[i]] = successProb
+    failureCounts <- successProb[successProb[, 5] < predictive.cutoff,
+                                 1]
+    failureCountLength <- length(failureCounts)
+    if (failureCountLength > 0) {
+      failureCountLengthList[[i]] <- failureCountLength
+      n.predictive.cutoff.list[[i]] <- failureCounts[failureCountLength]
+    }
+    else {
+      failureCountLengthList[[i]] <- (-99)
+      if (successProb[1, 1] == 0) {
+        n.predictive.cutoff.list[[i]] <- failureCounts[failureCountLength]
+      }
+      else {
+        n.predictive.cutoff.list[[i]] <- successProb[1,
+                                                     1] - 1
+      }
+    }
+    if (length(n.predictive.cutoff.list[[1]]) == 0 || n.predictive.cutoff.list[[1]] ==
+        0) {
+      #      warning("With such a low unfavorable p value no events needed for stopping in stage ",i, ", hence this method is not appropriate")
+
+      #-- disable the case of no responders.
+      # return(paste("No stopping in the 1st stage. Please increase the sample size in the 1st stage  and rerun the program."))
+    }
+  }
+  pp <- sort(unique(round(c(p.target - c(0.1, 0.05, 0.15, 0.2,
+                                         0.25, 0.3), p.target, p.target + c(0.1, 0.05, 0.15, 0.2,
+                                                                            0.25, 0.3), p.h1), 5)))
+  senRates <- pp[(pp > 0) & (pp < 1)]
+  required = c(unlist(n.predictive.cutoff.list), n.needed.for.greater.p0 -
+                 1)
+  combinations <<- list()
+  generateCombinationsRecursively(ns, required)
+  if (analysis.type == "Analytical") {
+    stageSensitivities <- t(apply(t(senRates), 2, analyticForm,
+                                  nn.list = ns, passCombinations = combinations, INCREASE = INCREASE))
+    prob.stop.name <- paste("prob.stop.interim.", 1:(dim(stageSensitivities)[2] -
+                                                       1), sep = "")
+    dimnames(stageSensitivities) <- list(senRates, c(prob.stop.name,
+                                                     "prob.above.threshold.of.reject.Ho"))
+    sensProbs <- t(apply(stageSensitivities, 1, function(x) c(sum(x[-length(x)]),
+                                                              x[length(x)])))
+    dimnames(sensProbs) <- list(senRates, c("prob.stop.overall",
+                                            "prob.above.threshold.of.reject.Ho"))
+  }
+  else {
+    simulateInterims_output <- simulateInterims(senRates,
+                                                sim.n, ns, n.predictive.cutoff.list, n.needed.for.greater.p0,
+                                                INCREASE, seed = seed)
+    stageSensitivities <- simulateInterims_output$stageSensitivities
+    sensProbs <- simulateInterims_output$sensitivity.data
+  }
+  list(n.needed.for.greater.p0 = n.needed.for.greater.p0, n.predictive.cutoff = unlist(n.predictive.cutoff.list),
+       all.data = betaBinProbList, predictive.prob.data = successProbList,
+       sensitivity.data = sensProbs, sensitivity.data.ind = stageSensitivities,
+       kk2.len.list = failureCountLengthList)
+}

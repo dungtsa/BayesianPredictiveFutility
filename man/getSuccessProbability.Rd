@@ -4,15 +4,27 @@
 \alias{getSuccessProbability}
 \title{Calculate probability of successful trial based on current and remaining tested patients}
 \usage{
-getSuccessProbability(n1, n2, betabinProbs, n.needed.for.greater.p0,
-  increase = TRUE)
+getSuccessProbability(
+  n1,
+  n2,
+  betabinProbs,
+  n.needed.for.greater.p0,
+  increase = TRUE
+)
 }
 \arguments{
 \item{n1}{number of tested patients}
 
 \item{n2}{number of remaining patients}
 
+\item{betabinProbs}{betabinProbs}
+
+\item{n.needed.for.greater.p0}{n.needed.for.greater.p0}
+
 \item{increase}{boolean value specifying study type, TRUE = increase FALSE = reduce}
+}
+\value{
+
 }
 \description{
 Calculate probability of successful trial based on current and remaining tested patients

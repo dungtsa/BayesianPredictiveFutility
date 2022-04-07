@@ -7,7 +7,18 @@
 calcPbb(n1, n2, beta.a, beta.b, k, INCREASE = TRUE)
 }
 \arguments{
-\item{k}{}
+\item{n1}{n1}
+
+\item{n2}{n1}
+
+\item{beta.a}{beta.a}
+
+\item{beta.b}{beta.b}
+
+\item{k}{k value}
+}
+\value{
+
 }
 \description{
 Calculate beta binomial probabilities for increase scenario

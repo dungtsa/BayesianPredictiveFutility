@@ -7,7 +7,18 @@
 sensAnalysis(pp, n1, n2, r1, r)
 }
 \arguments{
-\item{r}{}
+\item{pp}{pp}
+
+\item{n1}{n1}
+
+\item{n2}{n2}
+
+\item{r1}{r1}
+
+\item{r}{r value}
+}
+\value{
+
 }
 \description{
 Simulation based sensitivity analysis

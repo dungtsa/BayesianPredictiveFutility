@@ -8,11 +8,11 @@ date: "`r format(Sys.time(), '%d %B %Y')`"
 author: "`r params$set_author`"
 header-includes: 
     - \usepackage{bbm}
+    - \usepackage[table]{xcolor}
     - \usepackage{booktabs}
     - \usepackage{longtable}
     - \usepackage{array}
     - \usepackage{multirow}
-    - \usepackage[table]{xcolor}
     - \usepackage{wrapfig}
     - \usepackage{float}
     - \usepackage{colortbl}
@@ -27,12 +27,22 @@ header-includes:
  ======================================================== 
 
 ```{r library, echo = FALSE,comment = "",warning = FALSE,message = FALSE}
+packages = c("shiny","knitr","kableExtra", 'rmarkdown',"extraDistr" )
+#if a package is installed, it will be loaded
+#if any are not, the missing package(s) will be installed and loaded
+package.check <- lapply(packages, FUN = function(x) {
+  if (!require(x, character.only = TRUE)) {
+ 
+    install.packages(x, dependencies = TRUE,repos = "http://cran.us.r-project.org")
+  }
+  library(x, character.only = TRUE)
+})
 
-library(shiny)
-library(knitr)
-library(rmarkdown)
-library(kableExtra)
-library(extraDistr)
+# library(shiny)
+# library(knitr)
+# library(rmarkdown)
+# library(kableExtra)
+# library(extraDistr)
 
 options(scipen = 3)
 #options(knitr.table.format  =  "latex")
@@ -282,7 +292,7 @@ cat(tmp99$a1)
 
     }
 
-    ```
+```
 
 # Figure 5: Sensitivity Analysis: Posterior Probability
 
@@ -306,7 +316,7 @@ cat(tmp99$a1)
 
     }
 
-    ```
+```
 
 # Figure 6: Sensitivity Analysis: Sample Size
 
@@ -329,7 +339,7 @@ cat(tmp99$a1)
       points((1:dim(tmp0)[1])[index1],tmp0[index1,name2[i]],col=2,cex=5,pch=2)
     }
 
-    ```
+```
 
 # Figure 7: Sensitivity Analysis: Beta Prior Distribution
 
@@ -354,7 +364,7 @@ cat(tmp99$a1)
       points((1:dim(tmp0)[1])[index1],tmp0[index1,name2[i]],col=2,cex=5,pch=2)
     }
 
-    ```
+```
     
     
 

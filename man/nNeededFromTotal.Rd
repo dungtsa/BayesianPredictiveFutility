@@ -4,8 +4,14 @@
 \alias{nNeededFromTotal}
 \title{Calculates number of positive outcomes from total number of patients that is required for the full study to be successful}
 \usage{
-nNeededFromTotal(ns, p.target, beta.a, beta.b, cutoff.n.for.greater.p0,
-  increase)
+nNeededFromTotal(
+  ns,
+  p.target,
+  beta.a,
+  beta.b,
+  cutoff.n.for.greater.p0,
+  increase
+)
 }
 \arguments{
 \item{ns}{array of patients per stage}

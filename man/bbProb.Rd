@@ -7,7 +7,18 @@
 bbProb(n1, n2, beta.a, beta.b, INCREASE = TRUE)
 }
 \arguments{
-\item{INCREASE}{}
+\item{n1}{n1}
+
+\item{n2}{n2}
+
+\item{beta.a}{beta.a}
+
+\item{beta.b}{beta.b}
+
+\item{INCREASE}{True (default) or false}
+}
+\value{
+
 }
 \description{
 Calculate beta bionomial probabilities
