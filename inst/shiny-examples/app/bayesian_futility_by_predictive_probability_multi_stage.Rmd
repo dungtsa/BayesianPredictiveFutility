@@ -8,7 +8,6 @@ date: "`r format(Sys.time(), '%d %B %Y')`"
 author: "`r params$set_author`"
 header-includes: 
     - \usepackage{bbm}
-    - \usepackage[table]{xcolor}
     - \usepackage{booktabs}
     - \usepackage{longtable}
     - \usepackage{array}
